@@ -1,0 +1,189 @@
+Microsoft Windows [Versión 10.0.22621.963]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\sqlite>sqlite3 DBECU911.db;
+SQLite version 3.39.4 2022-09-29 15:55:41
+Enter ".help" for usage hints.
+sqlite> .open DBECU911.db
+sqlite> .database
+main: C:\sqlite\DBECU911.db r/w
+sqlite> .databases
+main: C:\sqlite\DBECU911.db r/w
+sqlite> .tables
+sqlite> CREATE TABLE BaseLegal (Id_BaseLegal INTEGER PRIMARY KEY AUTOINCREMENT, Nom_Cap VARCHAR, Num_Art INTEGER, Fecha_Creacion TEXT, Fecha_Final TEXT, Status_BaseLegal INTEGER );
+sqlite> .tables
+BaseLegal
+sqlite> CREATE TABLE ECU911 (Id_Ecu911 INTEGER PRIMARY KEY AUTOINCREMENT, Status_Ecu911 INTEGER, Descripcion_Ecu911, TEXT );
+sqlite> .tables
+BaseLegal  ECU911
+sqlite> CREATE TABLE Beneficiarios (Id_Benef INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_Benef VARCHAR NOT NULL, PrimApell_Benef VARCHAR NOT NULL, Direccion_Benef CHART(50), Genero_Benef TEXT );
+sqlite> .tables
+BaseLegal      Beneficiarios  ECU911
+sqlite> CREATE TABLE Dispositivos (Id_Disp INTEGER PRIMARY KEY AUTOINCREMENT, Tipo_Disp TEXT, NumTelf_Disp INTEGER );
+sqlite> .tables
+BaseLegal      Beneficiarios  Dispositivos   ECU911
+sqlite> CREATE TABLE OperadorCallCenter (Id_OperCallCenter INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_OperCallCenter VARCHAR NOT NULL, PrimApellOperCallCenter VARCHAR NOT NULL, Telf_OperCallCenter INTEGER, Direccion_OperCallCenter CHART(50), CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef)  );
+Parse error: unknown column "Id_Benef" in foreign key definition
+sqlite> CREATE TABLE OperadorCallCenter (Id_OperCallCenter INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_OperCallCenter VARCHAR NOT NULL, PrimApellOperCallCenter VARCHAR NOT NULL, Telf_OperCallCenter INTEGER, Direccion_OperCallCenter CHART(50), CONSTRAINT fk_Beneficiarios PRIMARY KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef)  );
+Parse error: near "REFERENCES": syntax error
+  ONSTRAINT fk_Beneficiarios PRIMARY KEY (Id_Benef) REFERENCES Beneficiarios(Id_
+                                      error here ---^
+sqlite> CREATE TABLE OperadorCallCenter (Id_OperCallCenter INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_OperCallCenter VARCHAR NOT NULL, PrimApellOperCallCenter VARCHAR NOT NULL, Telf_OperCallCenter INTEGER, Direccion_OperCallCenter CHART(50), CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef)  );
+Parse error: unknown column "Id_Benef" in foreign key definition
+sqlite> CREATE TABLE OperadorCallCenter (Id_OperCallCenter INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_OperCallCenter VARCHAR NOT NULL, PrimApellOperCallCenter VARCHAR NOT NULL, Telf_OperCallCenter INTEGER, Direccion_OperCallCenter CHART(50), Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef)  );
+sqlite> CREATE TABLE OperadorCallCenter (Id_OperCallCenter INTEGER PRIMARY KEY AUTOINCREMENT, PrimNom_OperCallCenter VARCHAR NOT NULL, PrimApellOperCallCenter VARCHAR NOT NULL, Telf_OperCallCenter INTEGER, Direccion_OperCallCenter CHART(50) );
+sqlite> .tables
+BaseLegal           Dispositivos        OperadorCallCenter
+Beneficiarios       ECU911
+sqlite> CREATE TABLE Emergencia (Id_Emergencia INTEGER PRIMARY KEY AUTOINCREMENT, Nom_Emergencia VARCHAR NOT NULL, Statu
+s_Emergencia INTEGER, Descripcion_Emergencia TEXT, Tipo_Emergencia TEXT );
+sqlite> .tables
+BaseLegal           Dispositivos        Emergencia
+Beneficiarios       ECU911              OperadorCallCenter
+sqlite> CREATE TABLE FechaRegistro (Status_FechaReg INTEGER PRIMARY KEY, Activo_FechReg TEXT, Proceso_FechReg TEXT, Inac
+tivo_FechReg TEXT );
+sqlite> .tables
+BaseLegal           Dispositivos        Emergencia          OperadorCallCenter
+Beneficiarios       ECU911              FechaRegistro
+sqlite> CREATE TABLE InstitucionExterna (Id_InstExter INTEGER PRIMARY KEY AUTOINCREMENT, Nom_InstExter VARCHAR NOT NULL, Tel_InstExt INTEGER );
+sqlite> .tables
+BaseLegal           Dispositivos        Emergencia          InstitucionExterna
+Beneficiarios       ECU911              FechaRegistro       OperadorCallCenter
+sqlite> CREATE TABLE Enviado (CONSTRAINT fk_FechaRegistro FOREIGN KEY (Status_FechaReg) REFERENCES FechaRegistro(Status_FechaReg) );
+Parse error: near "CONSTRAINT": syntax error
+  CREATE TABLE Enviado (CONSTRAINT fk_FechaRegistro FOREIGN KEY (Status_FechaReg
+                        ^--- error here
+sqlite> CREATE TABLE Enviado (Status_FechaReg INTEGER PRIMARY KEY );
+sqlite> .tables
+BaseLegal           ECU911              FechaRegistro
+Beneficiarios       Emergencia          InstitucionExterna
+Dispositivos        Enviado             OperadorCallCenter
+sqlite> CREATE TABLE DepartamentoCoordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINCREMENT, Nom_DepCoord TEXT, Status_DepCoord INTEGER );
+sqlite> CREATE TABLE DepartamentoCoordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINCREMENT, Nom_DepCoord TEXT, Status_DepCoord INTEGER, CONSTRAINT fk_OperadorCaññCenter FOREIGN KEY (Id_OperCallCenter) REFERENCES OperadorCallCenter(Id_OperCallCenter) );
+Parse error: table DepartamentoCoordinacion already exists
+  CREATE TABLE DepartamentoCoordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINC
+               ^--- error here
+sqlite> CREATE TABLE DepartamentoCoordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINCREMENT, Nom_DepCoord TEXT, Status_DepCoord INTEGER, CONSTRAINT fk_OperadorCallCenter FOREIGN KEY (Id_OperCallCenter) REFERENCES OperadorCallCenter(Id_Oper
+CallCenter) );
+Parse error: table DepartamentoCoordinacion already exists
+  CREATE TABLE DepartamentoCoordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINC
+               ^--- error here
+sqlite> CREATE TABLE DepartamentoCordinacion (Id_DepCoord INTEGER PRIMARY KEY AUTOINCREMENT, Nom_DepCoord TEXT, Status_D
+epCoord INTEGER, CONSTRAINT fk_OperadorCallCenter FOREIGN KEY (Id_OperCallCenter) REFERENCES OperadorCallCenter(Id_OperC
+allCenter) );
+Parse error: unknown column "Id_OperCallCenter" in foreign key definition
+sqlite> .tables
+BaseLegal                 ECU911                    InstitucionExterna
+Beneficiarios             Emergencia                OperadorCallCenter
+DepartamentoCoordinacion  Enviado
+Dispositivos              FechaRegistro
+sqlite> CREATE TABLE Persona ();
+Parse error: near ")": syntax error
+  CREATE TABLE Persona ();
+                        ^--- error here
+sqlite> CREATE TABLE Persona
+   ...> );
+Parse error: near ")": syntax error
+  CREATE TABLE Persona );
+                       ^--- error here
+sqlite> CREATE TABLE Persona;
+Parse error: near ";": syntax error
+  CREATE TABLE Persona;
+                      ^--- error here
+sqlite> CREATE TABLE Persona (Id_Persona INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> .tables
+BaseLegal                 ECU911                    InstitucionExterna
+Beneficiarios             Emergencia                OperadorCallCenter
+DepartamentoCoordinacion  Enviado                   Persona
+Dispositivos              FechaRegistro
+sqlite> CREATE TABLE Empleado (Id_Empleado INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> CREATE TABLE Jefe (Id_Jefe INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> .tables
+BaseLegal                 Emergencia                Jefe
+Beneficiarios             Empleado                  OperadorCallCenter
+DepartamentoCoordinacion  Enviado                   Persona
+Dispositivos              FechaRegistro
+ECU911                    InstitucionExterna
+sqlite> CREATE TABLE Administrativo (Id_Administrativo INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> CREATE TABLE Oficinista (Id_Oficinista INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> .tables
+Administrativo            ECU911                    InstitucionExterna
+BaseLegal                 Emergencia                Jefe
+Beneficiarios             Empleado                  Oficinista
+DepartamentoCoordinacion  Enviado                   OperadorCallCenter
+Dispositivos              FechaRegistro             Persona
+sqlite>
+sqlite>
+sqlite> CREATE TABLE Provincia (Id_Prov INTEGER PRIMARY KEY AUTOINCREMENT, Nom_Prov TEXT NOT NULL, Status_Prov INTEGER )
+;
+sqlite> .tables
+Administrativo            Emergencia                Oficinista
+BaseLegal                 Empleado                  OperadorCallCenter
+Beneficiarios             Enviado                   Persona
+DepartamentoCoordinacion  FechaRegistro             Provincia
+Dispositivos              InstitucionExterna
+ECU911                    Jefe
+sqlite> CREATE TABLE canton ( id_canton INTEGER PRIMARY KEY AUTOINCREMENT, nom_cant VARCHAR, status_cant INTEGER  );
+sqlite> .table
+Administrativo            Emergencia                Oficinista
+BaseLegal                 Empleado                  OperadorCallCenter
+Beneficiarios             Enviado                   Persona
+DepartamentoCoordinacion  FechaRegistro             Provincia
+Dispositivos              InstitucionExterna        canton
+ECU911                    Jefe
+sqlite> CREATE TABLE parroquia ( id_parroq INTEGER PRIMARY KEY AUTOINCREMENT, nom_parroq VARCHAR, status_parroq INTEGER, canton_id INTEGER, CONSTRAINT fk_canton FOREIGN KEY (id_canton) REFERENCES canton(id_canton)  );
+Parse error: unknown column "id_canton" in foreign key definition
+sqlite> CREATE TABLE parroquia ( id_parroq INTEGER PRIMARY KEY AUTOINCREMENT, nom_parroq VARCHAR, status_parroq INTEGER, id_canton INTEGER, CONSTRAINT fk_canton FOREIGN KEY (id_canton) REFERENCES canton(id_canton)  );
+sqlite> .tables
+Administrativo            Emergencia                Oficinista
+BaseLegal                 Empleado                  OperadorCallCenter
+Beneficiarios             Enviado                   Persona
+DepartamentoCoordinacion  FechaRegistro             Provincia
+Dispositivos              InstitucionExterna        canton
+ECU911                    Jefe                      parroquia
+sqlite> .tables
+Administrativo            Emergencia                Oficinista
+BaseLegal                 Empleado                  OperadorCallCenter
+Beneficiarios             Enviado                   Persona
+DepartamentoCoordinacion  FechaRegistro             Provincia
+Dispositivos              InstitucionExterna        canton
+ECU911                    Jefe                      parroquia
+sqlite> CREATE TABLE Director (Id_Director INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> CREATE TABLE Subdirector (Id_subdirector INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> CREATE TABLE Secretaria (Id_Secretaria INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> CREATE TABLE AuxiliarRegistro (Id_AuxRegistro INTEGER PRIMARY KEY AUTOINCREMENT );
+sqlite> .tables
+Administrativo            Emergencia                Persona
+AuxiliarRegistro          Empleado                  Provincia
+BaseLegal                 Enviado                   Secretaria
+Beneficiarios             FechaRegistro             Subdirector
+DepartamentoCoordinacion  InstitucionExterna        canton
+Director                  Jefe                      parroquia
+Dispositivos              Oficinista
+ECU911                    OperadorCallCenter
+sqlite> CREATE TABLE recibe ( Id_Disp INTEGER, CONSTRAINT fk_Dispositivos FOREIGN KEY (Id_Disp) REFERENCES Dispositivos(Id_Disp), Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef), Id_OperCallCenter INTEGER, CONSTRAINT fk_OperadorCallCenter FOREIGN KEY (Id_OperCallCenter) REFERENCES OperadorCallCenter(Id_OperCallCenter)   );
+Parse error: near "Id_Benef": syntax error
+  N KEY (Id_Disp) REFERENCES Dispositivos(Id_Disp), Id_Benef INTEGER, CONSTRAINT
+                                      error here ---^
+sqlite> CREATE TABLE recibe ( Id_Disp INTEGER, CONSTRAINT fk_Dispositivos FOREIGN KEY (Id_Disp) REFERENCES Dispositivos(Id_Disp) );
+sqlite> CREATE TABLE recibe ( Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiarios(Id_Benef) );
+Parse error: table recibe already exists
+  CREATE TABLE recibe ( Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KE
+               ^--- error here
+sqlite> CREATE TABLE Recibe ( Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficiar
+ios(Id_Benef) );
+Parse error: table Recibe already exists
+  CREATE TABLE Recibe ( Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KE
+               ^--- error here
+sqlite> CREATE TABLE recibe1 ( Id_Benef INTEGER, CONSTRAINT fk_Beneficiarios FOREIGN KEY (Id_Benef) REFERENCES Beneficia
+rios(Id_Benef) );
+sqlite> .tables
+Administrativo            Emergencia                Persona
+AuxiliarRegistro          Empleado                  Provincia
+BaseLegal                 Enviado                   Secretaria
+Beneficiarios             FechaRegistro             Subdirector
+DepartamentoCoordinacion  InstitucionExterna        canton
+Director                  Jefe                      parroquia
+Dispositivos              Oficinista                recibe
+ECU911                    OperadorCallCenter        recibe1
+sqlite>
